@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Markwardt.ScriptUtilities</RootNamespace>
+    <AssemblyName>Markwardt.ScriptUtilities</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Markwardt.ScriptUtilities</PackageId>
+    <Authors>Christopher Markwardt</Authors>
+    <Description>Static, console-based utility methods for single-file C# script programs: the file, process, and console helpers ad hoc automation scripts need.</Description>
+    <PackageTags>scripting;automation;csharp;dotnet-run</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/cjmarkwardt/Script-Utilities</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/cjmarkwardt/Script-Utilities</PackageProjectUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+</Project>
