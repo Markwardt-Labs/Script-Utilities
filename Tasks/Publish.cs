@@ -31,9 +31,9 @@ if ((await Script.Run("gh", true, "workflow", "run", "csharp.yml", "-f", $"versi
 DateTimeOffset dispatchedAt = DateTimeOffset.UtcNow;
 long? runId = null;
 
-for (int attempt = 0; attempt < 15 && runId is null; attempt++)
+for (int attempt = 0; attempt < 40 && runId is null; attempt++)
 {
-    await Script.Wait(2);
+    await Script.Wait(3);
 
     RunResult list = await Script.Run("gh", false, "run", "list", "--workflow=csharp.yml", "--event=workflow_dispatch", "--limit=5", "--json", "databaseId,createdAt");
     if (list.IsFailure)
@@ -53,7 +53,10 @@ for (int attempt = 0; attempt < 15 && runId is null; attempt++)
 
 if (runId is null)
 {
-    return await Rollback("Could not find the dispatched run");
+    // The workflow was already confirmed dispatched above, so it may still be running - rolling back here
+    // would delete the release out from under a real in-progress run, breaking its later publish steps.
+    Script.Error($"Dispatched the publish workflow for {version} but could not confirm its run - check GitHub Actions manually. The release was left in place.");
+    return 1;
 }
 
 if ((await Script.Run("gh", true, "run", "watch", runId.Value.ToString(), "--exit-status")).IsFailure)
