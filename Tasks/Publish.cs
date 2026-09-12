@@ -69,7 +69,7 @@ if (runId is null)
     return 1;
 }
 
-if ((await Script.Run("gh", "run", "watch", runId.Value.ToString(), "--exit-status")).IsFailure)
+if ((await Script.Run("gh", "run", "watch", runId.Value.ToString(), "--exit-status", "--interval", "15")).IsFailure)
 {
     return await Rollback("Publish workflow failed");
 }
