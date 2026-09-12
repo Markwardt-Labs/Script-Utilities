@@ -15,18 +15,34 @@ public static class Script
 
     /// <summary>
     /// Runs a program directly, without an intermediate shell, with the given arguments, in the current
-    /// working directory. Arguments are passed through exactly as given, with no shell quoting, wildcard
-    /// expansion, or piping, keeping behavior consistent across operating systems.
+    /// working directory, also streaming the program's standard output to the console as it runs. Arguments
+    /// are passed through exactly as given, with no shell quoting, wildcard expansion, or piping, keeping
+    /// behavior consistent across operating systems.
     /// </summary>
     /// <param name="fileName">The program to run.</param>
-    /// <param name="stream">If true, also streams the program's standard output to the console as it runs, in addition to capturing it.</param>
     /// <param name="arguments">The program's arguments.</param>
     /// <returns>
     /// The program's result, including its captured standard output and exit code. A non-zero exit code is not
     /// treated as a failure and does not throw - check <see cref="RunResult.IsFailure"/> to detect that.
     /// </returns>
     /// <exception cref="InvalidOperationException">The program could not be started.</exception>
-    public static async Task<RunResult> Run(string fileName, bool stream = true, params string[] arguments)
+    public static async Task<RunResult> Run(string fileName, params string[] arguments) =>
+        await Run(true, fileName, arguments);
+
+    /// <summary>
+    /// Runs a program directly, without an intermediate shell, with the given arguments, in the current
+    /// working directory. Arguments are passed through exactly as given, with no shell quoting, wildcard
+    /// expansion, or piping, keeping behavior consistent across operating systems.
+    /// </summary>
+    /// <param name="stream">If true, also streams the program's standard output to the console as it runs, in addition to capturing it.</param>
+    /// <param name="fileName">The program to run.</param>
+    /// <param name="arguments">The program's arguments.</param>
+    /// <returns>
+    /// The program's result, including its captured standard output and exit code. A non-zero exit code is not
+    /// treated as a failure and does not throw - check <see cref="RunResult.IsFailure"/> to detect that.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">The program could not be started.</exception>
+    public static async Task<RunResult> Run(bool stream, string fileName, params string[] arguments)
     {
         ProcessStartInfo startInfo = new(fileName) { UseShellExecute = false, RedirectStandardOutput = true };
         foreach (string argument in arguments)

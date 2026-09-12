@@ -18,7 +18,7 @@ if (string.IsNullOrEmpty(version))
     return 1;
 }
 
-if ((await Script.Run("gh", true, "release", "create", version, "--title", version, "--generate-notes")).IsFailure)
+if ((await Script.Run("gh", "release", "create", version, "--title", version, "--generate-notes")).IsFailure)
 {
     return 1;
 }
@@ -28,7 +28,7 @@ if ((await Script.Run("gh", true, "release", "create", version, "--title", versi
 // timestamp once network round-trip latency is accounted for, permanently failing the comparison below.
 DateTimeOffset dispatchedAt = DateTimeOffset.UtcNow.AddSeconds(-30);
 
-if ((await Script.Run("gh", true, "workflow", "run", "csharp.yml", "-f", $"version={version}")).IsFailure)
+if ((await Script.Run("gh", "workflow", "run", "build.yml", "-f", $"version={version}")).IsFailure)
 {
     return await Rollback("Failed to dispatch the publish workflow");
 }
@@ -45,7 +45,7 @@ for (int attempt = 0; attempt < 40 && runId is null; attempt++)
         Script.Log($"Still waiting for the run to appear... ({attempt * 3}s elapsed)");
     }
 
-    RunResult list = await Script.Run("gh", false, "run", "list", "--workflow=csharp.yml", "--event=workflow_dispatch", "--limit=5", "--json", "databaseId,createdAt");
+    RunResult list = await Script.Run(false, "gh", "run", "list", "--workflow=build.yml", "--event=workflow_dispatch", "--limit=5", "--json", "databaseId,createdAt");
     if (list.IsFailure)
     {
         continue;
@@ -69,7 +69,7 @@ if (runId is null)
     return 1;
 }
 
-if ((await Script.Run("gh", true, "run", "watch", runId.Value.ToString(), "--exit-status")).IsFailure)
+if ((await Script.Run("gh", "run", "watch", runId.Value.ToString(), "--exit-status")).IsFailure)
 {
     return await Rollback("Publish workflow failed");
 }
@@ -80,6 +80,6 @@ return 0;
 async Task<int> Rollback(string reason)
 {
     Script.Error($"{reason} - rolling back release {version}.");
-    await Script.Run("gh", true, "release", "delete", version, "--yes", "--cleanup-tag");
+    await Script.Run("gh", "release", "delete", version, "--yes", "--cleanup-tag");
     return 1;
 }

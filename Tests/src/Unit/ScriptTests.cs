@@ -5,7 +5,7 @@ public sealed class ScriptTests
     [Fact]
     public async Task Run_SuccessfulCommand_ReturnsSuccessResultWithCapturedOutput()
     {
-        RunResult result = await Script.Run("dotnet", false, "--version");
+        RunResult result = await Script.Run(false, "dotnet", "--version");
 
         Assert.True(result.IsSuccess);
         Assert.False(result.IsFailure);
@@ -16,7 +16,7 @@ public sealed class ScriptTests
     [Fact]
     public async Task Run_FailingCommand_ReturnsFailureResult()
     {
-        RunResult result = await Script.Run("dotnet", false, "nosuchcommand12345");
+        RunResult result = await Script.Run(false, "dotnet", "nosuchcommand12345");
 
         Assert.False(result.IsSuccess);
         Assert.True(result.IsFailure);
@@ -31,7 +31,7 @@ public sealed class ScriptTests
         try
         {
             Console.SetOut(writer);
-            await Script.Run("dotnet", true, "--version");
+            await Script.Run(true, "dotnet", "--version");
         }
         finally
         {
@@ -49,7 +49,7 @@ public sealed class ScriptTests
         try
         {
             Console.SetOut(writer);
-            await Script.Run("dotnet", false, "--version");
+            await Script.Run(false, "dotnet", "--version");
         }
         finally
         {
@@ -57,6 +57,24 @@ public sealed class ScriptTests
         }
 
         Assert.Equal(string.Empty, writer.ToString());
+    }
+
+    [Fact]
+    public async Task Run_NoStreamArgument_StreamsOutputToConsole()
+    {
+        TextWriter original = Console.Out;
+        StringWriter writer = new();
+        try
+        {
+            Console.SetOut(writer);
+            await Script.Run("dotnet", "--version");
+        }
+        finally
+        {
+            Console.SetOut(original);
+        }
+
+        Assert.Matches(@"\d+\.\d+", writer.ToString());
     }
 
     [Fact]

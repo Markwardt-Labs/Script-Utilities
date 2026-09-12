@@ -8,12 +8,12 @@ using Markwardt.ScriptUtilities;
 
 const string TestResultsFolder = "TestResults";
 
-(await Script.Run("dotnet", false, "tool", "restore")).Verify();
+(await Script.Run(false, "dotnet", "tool", "restore")).Verify();
 Script.Delete(TestResultsFolder);
 
-(await Script.Run("dotnet", true, "test", "Tests/Tests.csproj", "--settings", "Tests/coverage.runsettings", "--collect:XPlat Code Coverage", "--results-directory", TestResultsFolder)).Verify();
+(await Script.Run("dotnet", "test", "Tests/Tests.csproj", "--settings", "Tests/coverage.runsettings", "--collect:XPlat Code Coverage", "--results-directory", TestResultsFolder)).Verify();
 
-(await Script.Run("dotnet", false, "reportgenerator", $"-reports:{TestResultsFolder}/**/coverage.cobertura.xml", $"-targetdir:{TestResultsFolder}", "-reporttypes:TextSummary")).Verify();
+(await Script.Run(false, "dotnet", "reportgenerator", $"-reports:{TestResultsFolder}/**/coverage.cobertura.xml", $"-targetdir:{TestResultsFolder}", "-reporttypes:TextSummary")).Verify();
 
 Script.Log(await Script.Read(Path.Combine(TestResultsFolder, "Summary.txt")) ?? throw new InvalidOperationException("Coverage summary was not generated."));
 Script.Delete(TestResultsFolder);

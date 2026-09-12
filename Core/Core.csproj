@@ -16,8 +16,8 @@
     <PackageTags>scripting;automation;csharp;dotnet-run</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/cjmarkwardt/Script-Utilities</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/cjmarkwardt/Script-Utilities</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Markwardt-Labs/Script-Utilities</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Markwardt-Labs/Script-Utilities</PackageProjectUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Release'">true</GeneratePackageOnBuild>

@@ -1,7 +1,7 @@
 namespace Markwardt.ScriptUtilities;
 
 /// <summary>
-/// The result of running a program via <see cref="Script.Run(string, bool, string[])"/>.
+/// The result of running a program via <see cref="Script.Run(bool, string, string[])"/>.
 /// </summary>
 public sealed record RunResult
 {
